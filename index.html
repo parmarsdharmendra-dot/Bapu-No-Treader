@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b0f17">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>BAPU NO TRADER</title>
+<style>
+:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#0b0f17;--card:#131a26;--card2:#1a2332;--line:#243044;--tx:#e6ebf5;--mut:#8a97ad;--up:#22c55e;--dn:#ef4444;--wait:#f5b324;--acc:#3b82f6}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:720px;margin:0 auto;padding:12px 12px 40px}
+header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+h1{font-size:17px;margin:0;letter-spacing:.08em}h1 span{color:var(--acc)}
+.demo{background:#3a2a05;border:1px solid #6b4d0a;color:var(--wait);border-radius:8px;padding:8px 10px;font-size:12px;margin-bottom:12px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--card);padding:4px;border-radius:12px;margin-bottom:12px}
+button{font:inherit;color:inherit;cursor:pointer;border:0;min-height:44px}
+.tabs button{background:none;border-radius:9px;font-weight:600;color:var(--mut)}
+.tabs button.on{background:var(--acc);color:#fff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px}
+.card h2{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--mut);margin:0 0 10px;font-weight:600}
+.wl{display:grid;gap:6px}
+.row{display:flex;justify-content:space-between;align-items:center;background:var(--card2);border:1px solid transparent;border-radius:10px;padding:10px 12px;width:100%;text-align:left}
+.row.on{border-color:var(--acc)}
+.row b{display:block}.row small{color:var(--mut)}
+.r{text-align:right}.up{color:var(--up)}.dn{color:var(--dn)}.wt{color:var(--wait)}
+.tf{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
+.tf button{background:var(--card2);border-radius:9px;color:var(--mut);font-weight:600}
+.tf button.on{background:var(--acc);color:#fff}
+canvas{width:100%;height:240px;display:block;border-radius:8px;background:#0e1420}
+.head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.price{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.sig{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.badge{font-size:20px;font-weight:800;padding:8px 18px;border-radius:10px;letter-spacing:.06em}
+.badge.LONG{background:rgba(34,197,94,.15);color:var(--up);border:1px solid var(--up)}
+.badge.SHORT{background:rgba(239,68,68,.15);color:var(--dn);border:1px solid var(--dn)}
+.badge.WAIT{background:rgba(245,179,36,.15);color:var(--wait);border:1px solid var(--wait)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kv{background:var(--card2);border-radius:10px;padding:8px 10px}
+.kv small{display:block;color:var(--mut);font-size:11px}.kv b{font-variant-numeric:tabular-nums}
+.why{color:var(--mut);font-size:13px;margin:10px 0 0}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.ok{background:var(--up);color:#04130a;font-weight:700;border-radius:10px}
+.no{background:var(--card2);color:var(--dn);border:1px solid var(--dn);font-weight:700;border-radius:10px}
+button:disabled{opacity:.35;cursor:not-allowed}
+.pos{background:var(--card2);border-radius:10px;padding:10px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pos small{color:var(--mut)}.cl{background:var(--line);border-radius:8px;padding:0 12px;min-height:36px}
+.empty{color:var(--mut);font-size:13px}
+.log{font-size:12px;color:var(--mut);margin:4px 0}
+.tv{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;min-height:44px;border-radius:10px;background:var(--card2);border:1px solid var(--acc);color:var(--acc);font-weight:700;text-decoration:none}
+input{width:100%;background:none;border:0;border-bottom:1px solid var(--line);color:var(--tx);font:700 16px system-ui;padding:6px 0;min-height:40px;outline:0}input:focus{border-color:var(--acc)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.chips button{background:var(--card2);border-radius:20px;padding:0 14px;min-height:36px;color:var(--mut);font-weight:600}
+.note{font-size:11px;color:var(--mut);text-align:center;margin-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><h1>BAPU NO <span>TRADER</span></h1><div class="small wt" style="font-size:12px">● DEMO</div></header>
+<div class="demo"><b>DEMO MODE:</b> all prices, charts and AI signals are simulated demo data. No broker is connected, no real orders are placed, and no API keys are needed. Not financial advice.</div>
+<div class="tabs"><button id="t-crypto" class="on">Crypto</button><button id="t-nse">NSE India</button></div>
+
+<div class="card"><h2>Paper trading settings (demo money)</h2>
+<div class="grid"><label class="kv"><small>Money invested (demo capital)</small><input id="cap" type="number" inputmode="decimal" min="100" step="1000"></label><label class="kv"><small>Risk per trade (%)</small><input id="rsk" type="number" inputmode="decimal" min="0.1" max="5" step="0.1"></label></div>
+<div class="chips" id="chips"></div>
+<div class="log">Position size = (capital × risk %) ÷ distance to stop loss, capped at your capital. Virtual money only.</div></div>
+
+<div class="card"><h2 id="wlTitle">Watchlist</h2><div class="wl" id="wl"></div></div>
+
+<div class="card">
+  <div class="head"><div><b id="cSym"></b><div class="price" id="cPrice"></div></div><div class="r" id="cChg"></div></div>
+  <div class="tf" id="tf"></div>
+  <canvas id="cv"></canvas>
+  <div class="log">Demo candles · lines: <span style="color:#f5b324">EMA 9</span> · <span style="color:#a78bfa">EMA 21</span></div>
+  <a class="tv" id="tv" href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer">Open in TradingView ↗</a>
+  <div class="log" style="text-align:center">Opens the real TradingView chart. Use its Paper Trading for a demo account.</div>
+</div>
+
+<div class="card">
+  <h2>AI Analysis (demo logic)</h2>
+  <div class="sig"><div class="badge" id="badge"></div><div id="conf" class="log" style="font-size:13px"></div></div>
+  <div class="grid" id="lv"></div>
+  <p class="why" id="why"></p>
+  <div class="acts"><button class="ok" id="appr">✓ Approve paper trade</button><button class="no" id="rej">✕ Reject</button></div>
+</div>
+
+<div class="card"><h2>Paper positions</h2><div id="pos"></div></div>
+<div class="card"><h2>Decision log</h2><div id="log"></div></div>
+<div class="note">BAPU NO TRADER · simulated environment for learning only</div>
+</div>
+
+<script>
+const SYMS={
+ crypto:[{s:'BTCUSD',n:'Bitcoin',p:67200,v:1,c:'$'},{s:'ETHUSD',n:'Ethereum',p:3480,v:1.2,c:'$'},{s:'XAUTUSD',n:'Tether Gold',p:2655,v:.4,c:'$'}],
+ nse:[{s:'RELIANCE',n:'Reliance Industries',p:2910,v:.5,c:'₹'},{s:'TCS',n:'Tata Consultancy',p:4120,v:.45,c:'₹'},{s:'HDFCBANK',n:'HDFC Bank',p:1655,v:.5,c:'₹'},{s:'INFY',n:'Infosys',p:1795,v:.55,c:'₹'},{s:'SBIN',n:'State Bank of India',p:812,v:.6,c:'₹'}]};
+const TFV={'5m':.0014,'15m':.0024,'1h':.005,'4h':.01};
+const ALL=[...SYMS.crypto,...SYMS.nse];
+const price={},open={};ALL.forEach(x=>{price[x.s]=x.p;open[x.s]=x.p*(1+(hash(x.s)%100-50)/5000)});
+let market='crypto',cur=SYMS.crypto[0],tf='15m',candles=[],sig=null,positions=[],logs=[],capital=100000,riskPct=1;
+const $=id=>document.getElementById(id);
+try{const d=JSON.parse(localStorage.getItem('dat')||'null');if(d){positions=d.positions||[];logs=d.logs||[];capital=d.capital||capital;riskPct=d.riskPct||riskPct}}catch(e){}
+function save(){try{localStorage.setItem('dat',JSON.stringify({positions,logs,capital,riskPct}))}catch(e){}}
+function hash(s){let h=7;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h}
+function rng(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function fmt(n,c=cur.c){return c+n.toLocaleString('en-IN',{maximumFractionDigits:n<100?2:1,minimumFractionDigits:n<100?2:0})}
+function gen(){
+ const r=rng(hash(cur.s+tf)),vol=TFV[tf]*cur.v,out=[];let p=1,trend=0;
+ for(let i=0;i<60;i++){
+  if(i%15==0)trend=(r()-.5)*vol*.8;
+  const o=p,c=o*(1+trend+(r()-.5)*vol*2),h=Math.max(o,c)*(1+r()*vol*.6),l=Math.min(o,c)*(1-r()*vol*.6);
+  out.push({o,h,l,c});p=c}
+ const k=price[cur.s]/p;out.forEach(x=>{x.o*=k;x.h*=k;x.l*=k;x.c*=k});return out}
+function ema(a,n){const k=2/(n+1);let e=a[0];return a.map(v=>e=v*k+e*(1-k))}
+function rsi(a,n=14){let g=0,l=0;for(let i=a.length-n;i<a.length;i++){const d=a[i]-a[i-1];d>0?g+=d:l-=d}return l==0?100:100-100/(1+g/l)}
+function atr(cs,n=14){let s=0;for(let i=cs.length-n;i<cs.length;i++)s+=cs[i].h-cs[i].l;return s/n}
+function analyse(){
+ const cl=candles.map(x=>x.c),e9=ema(cl,9),e21=ema(cl,21),L=cl.length-1,R=rsi(cl),A=atr(candles),p=cl[L];
+ let side='WAIT',why='';
+ const gap=(e9[L]-e21[L])/p;
+ if(gap>.0008&&R<68){side='LONG';why=`EMA 9 is above EMA 21 (uptrend) and RSI is ${R.toFixed(0)}, not overbought.`}
+ else if(gap<-.0008&&R>32){side='SHORT';why=`EMA 9 is below EMA 21 (downtrend) and RSI is ${R.toFixed(0)}, not oversold.`}
+ else why=`Trend is unclear or momentum is stretched (RSI ${R.toFixed(0)}). Waiting is a valid position.`;
+ const d=side=='SHORT'?-1:1,risk=A*1.5;
+ sig={side,why,e9,e21,entry:p,sl:p-d*risk,t1:p+d*risk*1.5,t2:p+d*risk*3,rr:3,conf:Math.min(90,Math.round(50+Math.abs(gap)*8000)),risk}}
+function drawChart(){
+ const cv=$('cv'),dpr=devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;cv.width=W*dpr;cv.height=H*dpr;
+ const g=cv.getContext('2d');g.scale(dpr,dpr);
+ const lv=sig.side!='WAIT'?[sig.entry,sig.sl,sig.t1,sig.t2]:[];
+ let hi=Math.max(...candles.map(x=>x.h),...lv),lo=Math.min(...candles.map(x=>x.l),...lv);const pad=(hi-lo)*.05;hi+=pad;lo-=pad;
+ const pw=46,cw=(W-pw)/candles.length,Y=v=>H-(v-lo)/(hi-lo)*H;
+ g.strokeStyle='#1c2638';g.fillStyle='#8a97ad';g.font='10px system-ui';g.lineWidth=1;
+ for(let i=0;i<5;i++){const v=lo+(hi-lo)*i/4,y=Y(v);g.beginPath();g.moveTo(0,y);g.lineTo(W-pw,y);g.stroke();g.fillText(v<100?v.toFixed(2):v.toFixed(0),W-pw+4,y-2)}
+ candles.forEach((x,i)=>{const cx=i*cw+cw/2,up=x.c>=x.o;g.strokeStyle=g.fillStyle=up?'#22c55e':'#ef4444';
+  g.beginPath();g.moveTo(cx,Y(x.h));g.lineTo(cx,Y(x.l));g.stroke();
+  const t=Y(Math.max(x.o,x.c)),b=Y(Math.min(x.o,x.c));g.fillRect(cx-cw*.35,t,cw*.7,Math.max(1,b-t))});
+ [[sig.e9,'#f5b324'],[sig.e21,'#a78bfa']].forEach(([a,c])=>{g.strokeStyle=c;g.lineWidth=1.5;g.beginPath();a.forEach((v,i)=>{const x=i*cw+cw/2;i?g.lineTo(x,Y(v)):g.moveTo(x,Y(v))});g.stroke()});
+ g.setLineDash([4,3]);g.lineWidth=1;g.font='10px system-ui';
+ [[sig.entry,'#3b82f6','ENTRY'],[sig.sl,'#ef4444','SL'],[sig.t1,'#22c55e','T1'],[sig.t2,'#22c55e','T2']].forEach(([v,c,t])=>{if(!lv.length)return;g.strokeStyle=g.fillStyle=c;const y=Y(v);g.beginPath();g.moveTo(0,y);g.lineTo(W-pw,y);g.stroke();g.fillText(t,4,y-3)});
+ g.setLineDash([])}
+function render(){
+ const wl=$('wl');wl.innerHTML='';
+ SYMS[market].forEach(x=>{const ch=(price[x.s]/open[x.s]-1)*100,b=document.createElement('button');b.className='row'+(x.s==cur.s?' on':'');
+  b.innerHTML=`<span><b>${x.s}</b><small>${x.n}</small></span><span class="r"><b>${fmt(price[x.s],x.c)}</b><small class="${ch>=0?'up':'dn'}">${ch>=0?'+':''}${ch.toFixed(2)}%</small></span>`;
+  b.onclick=()=>{cur=x;rebuild()};wl.appendChild(b)});
+ $('wlTitle').textContent=(market=='crypto'?'Crypto':'NSE')+' watchlist · demo';
+ tick()}
+function tick(){
+ const ch=(price[cur.s]/open[cur.s]-1)*100;
+ $('cSym').textContent=cur.s+' · '+tf;$('cPrice').textContent=fmt(price[cur.s]);
+ $('tv').href='https://www.tradingview.com/chart/?symbol='+encodeURIComponent((market=='nse'?'NSE:':'')+cur.s)+'&interval='+({'5m':5,'15m':15,'1h':60,'4h':240})[tf];
+ $('cChg').innerHTML=`<b class="${ch>=0?'up':'dn'}">${ch>=0?'+':''}${ch.toFixed(2)}%</b><div class="log">today (demo)</div>`;
+ const bd=$('badge');bd.textContent=sig.side;bd.className='badge '+sig.side;
+ $('conf').innerHTML=`Confidence ${sig.conf}%<br>${sig.side=='WAIT'?'No trade suggested':'Demo rule-based signal'}`;
+ const kv=(l,v,c='')=>`<div class="kv"><small>${l}</small><b class="${c}">${v}</b></div>`,w=sig.side=='WAIT';
+ $('lv').innerHTML=w?kv('Entry','—')+kv('Stop loss','—')+kv('Target 1','—')+kv('Risk / Reward','—'):
+  kv('Entry',fmt(sig.entry))+kv('Stop loss',fmt(sig.sl),'dn')+kv('Target 1 (1.5R)',fmt(sig.t1),'up')+kv('Target 2 (3R)',fmt(sig.t2),'up')+kv('Risk / Reward','1 : '+sig.rr)+kv('Risk per trade',fmt(sz().risk))+kv('Quantity',sz().qty.toFixed(sz().qty<10?4:2))+kv('Position value',fmt(sz().qty*sig.entry));
+ $('why').textContent=sig.why;
+ $('appr').disabled=w;
+ drawChart();renderPos()}
+function renderPos(){
+ const el=$('pos');
+ el.innerHTML=positions.length?'':'<div class="empty">No open paper trades. Approve an AI idea to open one.</div>';
+ positions.forEach((p,i)=>{const pr=price[p.s],pnl=(pr-p.entry)*p.qty*(p.side=='LONG'?1:-1),d=document.createElement('div');d.className='pos';
+  d.innerHTML=`<div><b class="${p.side=='LONG'?'up':'dn'}">${p.side}</b> <b>${p.s}</b><br><small>Qty ${p.qty.toFixed(p.qty<10?3:1)} @ ${fmt(p.entry,p.c)} · SL ${fmt(p.sl,p.c)} · T1 ${fmt(p.t1,p.c)}</small></div><div class="r"><b class="${pnl>=0?'up':'dn'}">${pnl>=0?'+':''}${fmt(pnl,p.c)}</b><br><button class="cl">Close</button></div>`;
+  d.querySelector('button').onclick=()=>{addLog(`Closed paper ${p.side} ${p.s}, P&L ${pnl>=0?'+':''}${fmt(pnl,p.c)}`);positions.splice(i,1);save();renderPos()};
+  el.appendChild(d)});
+ $('log').innerHTML=logs.length?logs.slice(0,8).map(l=>`<div class="log">${l}</div>`).join(''):'<div class="empty">No decisions yet.</div>'}
+function addLog(t){logs.unshift(new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+' · '+t);logs=logs.slice(0,30);save()}
+function sz(){const risk=capital*riskPct/100,d=Math.abs(sig.entry-sig.sl)||1;return{risk,qty:Math.min(risk/d,capital/sig.entry)}}
+function initSet(){$('cap').value=capital;$('rsk').value=riskPct;
+ $('cap').onchange=()=>{capital=Math.max(100,+$('cap').value||capital);$('cap').value=capital;save();tick()};
+ $('rsk').onchange=()=>{riskPct=Math.min(5,Math.max(.1,+$('rsk').value||riskPct));$('rsk').value=riskPct;save();tick()};
+ [10000,50000,100000,500000].forEach(v=>{const b=document.createElement('button');b.textContent=v.toLocaleString('en-IN');b.onclick=()=>{capital=v;$('cap').value=v;save();tick()};$('chips').appendChild(b)})}
+initSet();
+function rebuild(){candles=gen();analyse();render()}
+$('appr').onclick=()=>{if(sig.side=='WAIT')return;
+ const qty=sz().qty;
+ positions.unshift({s:cur.s,c:cur.c,side:sig.side,entry:sig.entry,sl:sig.sl,t1:sig.t1,t2:sig.t2,qty});
+ addLog(`APPROVED paper ${sig.side} ${cur.s} (${tf}) at ${fmt(sig.entry)}`);save();renderPos();$('pos').scrollIntoView({behavior:'smooth',block:'center'})};
+$('rej').onclick=()=>{addLog(`REJECTED ${sig.side} idea on ${cur.s} (${tf})`);renderPos()};
+['5m','15m','1h','4h'].forEach(t=>{const b=document.createElement('button');b.textContent=t;b.className=t==tf?'on':'';b.onclick=()=>{tf=t;[...$('tf').children].forEach(x=>x.className=x.textContent==t?'on':'');rebuild()};$('tf').appendChild(b)});
+function setM(m){market=m;cur=SYMS[m][0];$('t-crypto').className=m=='crypto'?'on':'';$('t-nse').className=m=='nse'?'on':'';rebuild()}
+$('t-crypto').onclick=()=>setM('crypto');$('t-nse').onclick=()=>setM('nse');
+setInterval(()=>{ALL.forEach(x=>{price[x.s]*=1+(Math.random()-.5)*.0012*x.v});
+ const l=candles[candles.length-1];l.c=price[cur.s];l.h=Math.max(l.h,l.c);l.l=Math.min(l.l,l.c);
+ const keep=sig.side;analyse();SYMS[market].length&&render()},2500);
+addEventListener('resize',drawChart);
+rebuild();
+if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+</script>
+</body>
+</html>
